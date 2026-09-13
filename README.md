@@ -1,477 +1,65 @@
-<p align="center">
-  <img src="assets/app_icons/socialmesh_icon_512_rounded.png" width="120" alt="SocialMesh">
-</p>
+# No Bars Connect — Meshtastic
 
-<h1 align="center">SocialMesh</h1>
+No Bars Connect is the No Bars Club Meshtastic companion app, built from the open source SocialMesh project.
 
-<p align="center">
-  <strong>Mesh Radio Companion App</strong><br>
-  Connect to your Meshtastic radio, message off-grid, map your nodes, and explore the mesh — no internet required.
-</p>
+It is designed for off grid Meshtastic communication, device management, mapping, node discovery, messaging, telemetry, TAK workflows, waypoints, routing and other mesh tools while keeping a No Bars Club visual identity.
 
-<p align="center">
-  <a href="#status">Status</a> •
-  <a href="#features">Features</a> •
-  <a href="#nodedex">NodeDex</a> •
-  <a href="#signals">Signals</a> •
-  <a href="#getting-started">Getting Started</a> •
-  <a href="#building-from-source">Build</a> •
-  <a href="#contributing">Contributing</a>
-</p>
+## Project status
 
-<p align="center">
-  <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.10+-02569B?logo=flutter" alt="Flutter"></a>
-  <a href="https://meshtastic.org"><img src="https://img.shields.io/badge/Meshtastic-Compatible-67EA94" alt="Meshtastic"></a>
-  <a href="https://github.com/gotnull/socialmesh/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-blue" alt="License"></a>
-  <a href="https://github.com/gotnull/socialmesh/pulls"><img src="https://img.shields.io/badge/PRs-Welcome-brightgreen" alt="PRs Welcome"></a>
-  <a href="https://github.com/gotnull/socialmesh/stargazers"><img src="https://img.shields.io/github/stars/gotnull/socialmesh?style=flat&logo=github&color=yellow" alt="GitHub Stars"></a>
-</p>
+This repository is the **Meshtastic side** of the larger No Bars Connect project.
 
-<p align="center">
-  <a href="https://socialmesh.app">Website</a> •
-  <a href="https://apps.apple.com/app/id6742694642">iOS App</a> •
-  <a href="https://play.google.com/store/apps/details?id=com.gotnull.socialmesh">Android App</a> •
-  <a href="https://github.com/gotnull/socialmesh/issues">Issues</a>
-</p>
+- **Meshtastic:** this repository, based on SocialMesh
+- **MeshCore:** `nobarsclubofficial/No-Bars-Connect-MeshCore`
+- **Future unified experience:** No Bars Connect will provide a startup choice between Meshtastic and MeshCore while keeping each protocol separate underneath.
 
----
+## No Bars Club branding
 
-Connect to your mesh radio, message off-grid, discover nodes, and explore the mesh — **all without internet**.
+The branded client uses the No Bars Club website palette:
 
-SocialMesh works fully offline over BLE and USB. Firebase is optional for cloud sync and social features.
+- Background: `#080B0A`
+- Panel: `#0F1412`
+- Secondary panel: `#141B18`
+- Primary text: `#EEE9DC`
+- Muted text: `#9AA8A0`
+- Primary accent: `#9A6F35`
+- Secondary accent: `#7F8F6A`
+- Border: `#253129`
+- Danger: `#FF5B67`
 
----
+Website: https://www.nobarsclub.com
 
-## Status
+## Upstream and licensing
 
-- The **iOS and Android releases** on the App Store and Play Store are the current stable builds. All features listed in the [Features](#features) section below are available in these releases.
-- The offline-first architecture, mesh communication, NodeDex, Signals, TAK integration, and all companion-app capabilities are **shipped and stable**.
-- See [Architecture Overview](docs/ARCHITECTURE.md) for the current system design and [Releasing](docs/RELEASING.md) for the release process.
+This project is a modified fork of **SocialMesh** by gotnull:
 
----
+https://github.com/gotnull/socialmesh
 
-## NodeDex
+SocialMesh is licensed under the GNU General Public License v3.0 or later. No Bars Connect preserves the upstream copyright and license notices and makes the corresponding modified source available under the same license terms.
 
-> _Mesh node registry and discovery journal._
+Meshtastic is a separate open source project. Compatibility with Meshtastic does not imply ownership of, endorsement by, or affiliation with the Meshtastic project or its trademarks.
 
-Every node discovered on the mesh is automatically catalogued in the **NodeDex** — a persistent, queryable registry of all mesh nodes and their observed history. NodeDex serves as the authoritative record of what devices have been seen, how they behave, and where they have been observed. Each node receives a unique **procedural Sigil** (a geometric glyph derived deterministically from its identity) and a **behavioral classification** inferred from real observed data. Accessible from the drawer menu.
+## Important backend note
 
-### Procedural Sigils
+The upstream SocialMesh client contains optional integrations with hosted services such as Firebase, RevenueCat, Stripe and account/cloud features. No Bars Connect must not depend on upstream production accounts. Those integrations are being audited, disabled, or replaced for the No Bars build while local radio communication and offline functionality are preserved.
 
-Every node gets a unique constellation-style geometric identity generated from its node number. The same node always produces the same sigil — no randomness, no variation. Sigils are built from outer polygons (3-8 vertices), optional inner rings, radial lines, and a unique 3-color palette drawn from 16 curated colors.
+## Development direction
 
-### Personality Traits
+The first branded release focuses on:
 
-Traits are never user-assigned — they are passively inferred from observable telemetry and behavior:
+1. No Bars Connect product name and visual identity
+2. Android and iOS app identity and icons
+3. Website matched dark theme
+4. Preserving BLE, USB and local Meshtastic operation
+5. Preserving messaging, nodes, maps, telemetry, device configuration and TAK functionality
+6. Replacing or disabling upstream hosted service dependencies before public distribution
+7. Keeping upstream GPL attribution and source compliance intact
 
-| Trait        | Description                                                      |
-| ------------ | ---------------------------------------------------------------- |
-| **Relay**    | Router role with high throughput — forwards traffic for the mesh |
-| **Wanderer** | Seen across multiple distinct positions or regions               |
-| **Sentinel** | Fixed position, long-lived, high encounter count                 |
-| **Beacon**   | Always active, very frequent encounters                          |
-| **Ghost**    | Rarely seen relative to age — elusive presence                   |
-| **Courier**  | High message volume relative to encounters                       |
-| **Anchor**   | Persistent hub with many co-seen connections                     |
-| **Drifter**  | Irregular timing, unpredictable appearance pattern               |
+## Build
 
-Each trait includes a confidence score and evidence lines explaining the classification.
-
-### Patina Score
-
-A numerical measure (0-100) of how much observable history a node has accumulated, computed across six axes: tenure, encounters, geographic reach, signal depth, social connections, and recency. Early gains are meaningful; diminishing returns prevent runaway scores.
-
-### Progressive Disclosure
-
-Information is revealed as observation accumulates — new nodes start sparse, detail unlocks over time:
-
-| Tier | Name   | What appears                     |
-| ---- | ------ | -------------------------------- |
-| 0    | Trace  | Sigil, name, hex ID only         |
-| 1    | Noted  | Primary trait badge              |
-| 2    | Logged | Trait evidence and field note    |
-| 3    | Inked  | Full trait list and patina stamp |
-| 4    | Etched | Identity overlay at full density |
-
-### Sigil Evolution
-
-Sigils visually mature as patina accumulates — subtle line weight changes, color deepening, and micro-etch detail that progresses through five stages: **Seed**, **Marked**, **Inscribed**, **Heraldic**, and **Legacy**.
-
-### Sigil Cards
-
-Collectible trading-card-style renders of a node's full identity — rarity-tiered borders, dramatic sigil display, RPG-style stat grids, and shareable PNG export. Accessible from the NodeDex detail screen and the Nodes screen.
-
-### Field Notes
-
-Deterministic single-line observations that read like entries in a naturalist's field journal. The same node always gets the same note. Template families are selected by trait and filled with concrete values from the node's history.
-
-### Social Tags
-
-User-assigned labels for discovered nodes: **Contact**, **Trusted Node**, **Known Relay**, and **Frequent Peer**. Filter and sort the NodeDex by tag.
-
-### Co-Seen Tracking
-
-Records which nodes have been observed together on the mesh, building a social graph of node relationships over time.
+This remains a Flutter project. Follow the upstream SocialMesh build requirements until No Bars specific build documentation is completed.
 
 ---
 
-## Signals
-
-> _Structured mesh persistence with location and time context._
-
-Signals is the mesh-native persistence layer. Publish status updates, check-ins, and hazard markers that are received by all mesh members in range. Signals carry configurable TTL, GPS location stamps, and image attachments. Sorted by proximity and expiry. Designed for groups that need structured, time-bounded awareness without internet.
-
----
-
-## Features
-
-### Communication & Coordination
-
-#### Messaging
-
-| Feature               | Description                                                        |
-| --------------------- | ------------------------------------------------------------------ |
-| **Channel Messaging** | Send and receive on multiple channels simultaneously               |
-| **Direct Messages**   | Private, encrypted node-to-node communication                      |
-| **Quick Responses**   | Pre-configured canned messages for fast replies                    |
-| **Message Search**    | Full-text search across all conversations                          |
-| **Offline Queue**     | Messages queued when disconnected, sent automatically on reconnect |
-| **Reactions**         | React to messages with emoji responses                             |
-
-#### Network and Nodes
-
-| Feature              | Description                                                               |
-| -------------------- | ------------------------------------------------------------------------- |
-| **Node Discovery**   | See all nodes with signal strength, battery, and location                 |
-| **NodeDex**          | Mesh node registry with procedural sigils and behavioral classification   |
-| **Network Topology** | Visual graph showing mesh interconnections                                |
-| **Traceroute**       | Trace the exact path packets take through the mesh                        |
-| **Signal History**   | SNR and RSSI charts over time                                             |
-| **Favorites**        | Pin important nodes for quick access                                      |
-| **Node Profiles**    | Rich profiles with user info, social links, and custom avatars            |
-| **Presence**         | Track when nodes are online, their activity patterns, and last seen times |
-
-#### Maps and Location
-
-| Feature              | Description                                 |
-| -------------------- | ------------------------------------------- |
-| **Node Map**         | Interactive map with all GPS-enabled nodes  |
-| **Waypoints**        | Drop, share, and navigate to waypoints      |
-| **Location Sharing** | Broadcast your position to the mesh         |
-| **Map Styles**       | Street, satellite, and terrain views        |
-| **Route Recording**  | Record and save your routes with GPS tracks |
-
-#### Team Coordination
-
-| Feature               | Description                                                             |
-| --------------------- | ----------------------------------------------------------------------- |
-| **Activity Timeline** | Chronological feed of mesh activity and events with identity resolution |
-| **Group Profiles**    | View group member profiles with role, assignment, and contact details   |
-| **Signals Feed**      | Structured status updates sorted by proximity and expiry                |
-
-#### Safety
-
-- **Emergency SOS** — One-tap broadcast with optional GPS coordinates
-- **Geofence Alerts** — Notifications when nodes leave defined areas
-- **Battery Alerts** — Low battery warnings for tracked nodes
-
-#### Analytics and Monitoring
-
-| Feature            | Description                                                               |
-| ------------------ | ------------------------------------------------------------------------- |
-| **Mesh Health**    | Real-time network health metrics, utilization graphs, and issue detection |
-| **Reachability**   | Probabilistic assessment of node reachability based on observed data      |
-| **Presence**       | Track when nodes are online, their activity patterns, and last seen times |
-| **Route Analysis** | View discovered routes and packet paths through the mesh                  |
-| **Telemetry Logs** | Device metrics, environment sensors, air quality, position history        |
-
-#### Device Configuration
-
-Full control over your Meshtastic device:
-
-- **LoRa** — Region, modem preset, hop limit, frequency slot
-- **Power** — Sleep mode, shutdown timeout, power saving
-- **Position** — GPS mode, broadcast interval, smart position
-- **Bluetooth** — Pairing mode, PIN code, power settings
-- **Network** — WiFi, Ethernet, MQTT bridge
-- **Display** — Timeout, brightness, flip screen, OLED burn-in protection
-- **Detection Sensor** — Motion and door sensor triggers
-- **Canned Messages** — On-device quick responses
-
-#### Integrations
-
-- **IFTTT Webhooks** — Trigger automations on node events and geofence alerts
-- **MQTT Bridge** — Internet uplink configuration
-- **QR Codes** — Import/export channels and share node info instantly
-
-### Community, Visualization & Extras
-
-#### Audio
-
-- **7,000+ RTTTL Ringtones** — Organized by category, preview before sending
-- **Custom Compositions** — Create and save your own ringtones
-
-#### Visualization
-
-| Feature          | Description                                                  |
-| ---------------- | ------------------------------------------------------------ |
-| **World Map**    | Global view of Meshtastic nodes from the public MQTT network |
-| **Timeline**     | Chronological feed of all mesh activity and events           |
-
-#### Extras
-
-- **Sigil Cards** — Collectible trading-card-style renders of node identities with shareable PNG export
-
-#### Premium Features
-
-These features are available via one-time in-app purchases:
-
-| Feature               | Description                                                          |
-| --------------------- | -------------------------------------------------------------------- |
-| **Theme Pack**        | 12 accent colors to personalize the entire app                       |
-| **Ringtone Pack**     | 7,000+ searchable RTTTL ringtones — classic tunes, TV themes, games  |
-| **Widgets**           | Build custom dashboard widgets with live data, charts, and gauges    |
-| **Automations**       | Create rules that trigger alerts, send messages, and react to events |
-| **IFTTT Integration** | Connect your mesh to 700+ apps and services via webhooks             |
-
----
-
-## Tech Stack
-
-| Layer                | Technology                        |
-| -------------------- | --------------------------------- |
-| **UI Framework**     | Flutter 3.10+                     |
-| **State Management** | Riverpod 3.x                      |
-| **Protocol**         | Meshtastic Protobufs              |
-| **Local Storage**    | SQLite                            |
-| **Analytics**        | Firebase (optional)               |
-| **Sigil Generation** | Deterministic geometric identity  |
-| **Trait Inference**  | Passive behavioral classification |
-
----
-
-## Documentation
-
-- [Architecture Overview](docs/ARCHITECTURE.md) — How the app is structured
-- [Backend Boundary](docs/BACKEND.md) — What requires cloud services
-- [Releasing](docs/RELEASING.md) — How to cut a release
-
----
-
-## Getting Started
-
-### Prerequisites
-
-| Requirement      | Version                            |
-| ---------------- | ---------------------------------- |
-| Flutter SDK      | 3.10+                              |
-| Xcode            | 15+ (iOS)                          |
-| Android Studio   | SDK 34+                            |
-| Protocol Buffers | `brew install protobuf`            |
-| CocoaPods        | `sudo gem install cocoapods` (iOS) |
-
-### Quick Start (Demo Mode)
-
-Run the app without backend configuration using demo mode:
-
-```bash
-# Clone and bootstrap
-git clone https://github.com/gotnull/socialmesh.git
-cd socialmesh
-./tool/dev_bootstrap.sh
-
-# Run in demo mode (no backend required)
-flutter run --dart-define=SOCIALMESH_DEMO=1
-```
-
-The bootstrap script copies `.env.example` to `.env` when no `.env` exists and generates `.env.client` from it. `.env.client` is the file the app bundles and reads at startup; it is a declared asset, so a build without it fails. If you edit `.env` later, regenerate it:
-
-```bash
-dart run tool/generate_client_env.dart
-```
-
-Demo mode provides sample nodes and messages so you can explore the UI immediately. Purchases (RevenueCat) and cloud sync entitlement are switched off in demo mode, so paywalls list no products and nothing can be bought. Outside demo mode, leaving the RevenueCat keys in `.env` empty is also safe: the SDK is never configured and every purchase surface shows its empty state.
-
-### Production Build
-
-For production builds, demo mode is disabled by default. Configure Firebase and other services as documented below.
-
-```bash
-# Install dependencies
-flutter pub get
-
-# Generate Meshtastic protobufs
-./scripts/generate_protos.sh
-
-# Run on connected device
-flutter run
-```
-
-### Project Structure
-
-```
-lib/
-├── core/           # Theme, shared widgets, constants, safety utilities
-├── features/       # Feature modules
-│   ├── automations/# Rule-based event automation engine
-│   ├── channels/   # Channel messaging
-│   ├── dashboard/  # Custom widget dashboard
-│   ├── device/     # Device configuration
-│   ├── map/        # Interactive node map
-│   ├── mesh_health/# Network health analytics
-│   ├── messaging/  # Direct and channel messaging
-│   ├── nodedex/    # Mesh node registry (sigils, classifications, patina)
-│   ├── presence/   # Node presence tracking
-│   ├── reachability/# Node reachability analysis
-│   ├── signals/    # Structured mesh persistence
-│   ├── social/     # Activity timeline, team profiles
-│   ├── widget_builder/ # Custom dashboard widget editor
-│   ├── world_mesh/ # Global MQTT node map
-│   └── ...         # Additional feature modules
-├── generated/      # Meshtastic protobuf code
-├── models/         # Data models
-├── providers/      # Riverpod state management
-├── services/       # Protocol, storage, transport layers
-└── utils/          # Utilities and helpers
-```
-
----
-
-## Building from Source
-
-### What works out of the box
-
-- BLE and USB connection to Meshtastic devices
-- All mesh communication (messaging, node discovery, channels)
-- Local SQLite storage (NodeDex, signals, routes, packet deduplication)
-- Protobuf encoding/decoding
-- NodeDex with procedural sigils and trait inference
-
-### Optional: Firebase
-
-The app uses Firebase for optional cloud features. Without configuration:
-
-| Feature               | Behavior                 |
-| --------------------- | ------------------------ |
-| Analytics/Crashlytics | Disabled silently        |
-| Cloud sync            | Falls back to local-only |
-| Authentication        | Sign-in unavailable      |
-| Social features       | Local-only mode          |
-
-To enable, add your own `google-services.json` (Android) and `GoogleService-Info.plist` (iOS).
-
-### Build Commands
-
-```bash
-# Install dependencies
-flutter pub get
-
-# Generate Meshtastic protobufs
-./scripts/generate_protos.sh
-
-# iOS
-cd ios && pod install && cd ..
-flutter build ios
-
-# Android
-flutter build apk                    # Debug APK
-flutter build apk --release          # Release APK
-flutter build appbundle --release    # Play Store bundle
-```
-
-### Build Outputs
-
-| Platform       | Location                            |
-| -------------- | ----------------------------------- |
-| iOS            | `build/ios/ipa/`                    |
-| Android APK    | `build/app/outputs/flutter-apk/`    |
-| Android Bundle | `build/app/outputs/bundle/release/` |
-
----
-
-## URL Scheme
-
-SocialMesh registers `socialmesh://` for deep linking:
-
-```
-socialmesh://channel/<base64>   # Import channel configuration
-socialmesh://node/<base64>      # Import node information
-```
-
----
-
-## Project Status
-
-SocialMesh is a fully functional Meshtastic companion app available on iOS and Android. The codebase is stable and actively maintained.
-
-### Contributions Welcome
-
-- Bug fixes and performance improvements
-- New device configuration options as Meshtastic firmware evolves
-- UI/UX polish and accessibility improvements
-- Documentation and translations
-- Test coverage
-
-### Out of Scope
-
-The following are intentionally excluded from this repository:
-
-- Backend services, cloud functions, and APIs (proprietary)
-- Payment processing and subscription infrastructure
-- App Store/Play Store publishing workflows
-- Marketing materials and promotional content
-
----
-
-## Contributing
-
-We welcome contributions. Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a PR.
-
-All code must pass the project linter (`scripts/hooks/socialmesh-lint.sh`) with zero errors. The linter enforces banned patterns, required headers, async safety, and UI consistency rules automatically. PRs that fail the linter will not be accepted. See the [Contributing Guide](CONTRIBUTING.md) for the full list of enforced rules.
-
-See [SECURITY.md](SECURITY.md) for reporting vulnerabilities.
-
----
-
-## License
-
-This mobile application is licensed under the **GNU General Public License v3.0** (GPL-3.0-or-later).
-
-You are free to use, modify, and distribute this software under the terms of the GPL-3.0. See [LICENSE](LICENSE) for details.
-
-### Scope
-
-| Component                        | License                             |
-| -------------------------------- | ----------------------------------- |
-| **Mobile app** (this repository) | GPL-3.0 — source code provided here |
-| **Backend services**             | Proprietary — not included          |
-
-### Third-Party Notices
-
-See [NOTICE.md](NOTICE.md) for attribution of third-party components including Meshtastic protobufs.
-
----
-
-## Maintainer Setup
-
-For repository maintainers:
-
-1. Enable branch protection on `main`
-2. Require pull requests with at least one approval
-3. Require CI status checks to pass before merging
-4. Disallow force pushes to `main`
-
----
-
-## Resources
-
-- [Architecture Overview](docs/ARCHITECTURE.md)
-- [Backend Boundary](docs/BACKEND.md)
-- [Contributing Guide](CONTRIBUTING.md)
-- [Security Policy](SECURITY.md)
-
----
-
-<p align="center">
-  <strong>Built for the mesh. Built for the outdoors.</strong>
-</p>
+**No Bars Connect**  
+A No Bars Club project  
+https://www.nobarsclub.com
