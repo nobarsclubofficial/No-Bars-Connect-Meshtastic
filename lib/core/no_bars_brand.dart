@@ -2,15 +2,18 @@
 
 import 'package:flutter/material.dart';
 
-/// Central No Bars Club brand tokens for the No Bars Connect client.
+/// Central No Bars Club brand tokens for the No Bars Command client.
 ///
 /// Values mirror the live nobarsclub.com visual system so branded screens can
 /// migrate away from hard coded SocialMesh colors without scattering new
 /// constants throughout the app.
 abstract final class NoBarsBrand {
-  static const String appName = 'No Bars Connect';
+  static const String appName = 'No Bars Command';
+  static const String shortName = 'COMMAND';
+  static const String subtitle = 'Off Grid Communications Platform';
   static const String website = 'https://www.nobarsclub.com';
   static const String protocolLabel = 'Meshtastic';
+  static const String protocolProductName = 'Command • Meshtastic';
 
   static const Color background = Color(0xFF080B0A);
   static const Color panel = Color(0xFF0F1412);
