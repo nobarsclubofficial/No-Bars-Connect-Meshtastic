@@ -1,16 +1,19 @@
-# No Bars Connect — Meshtastic
+# No Bars Command — Meshtastic
 
-No Bars Connect is the No Bars Club Meshtastic companion app, built from the open source SocialMesh project.
+**Off Grid Communications Platform**
 
-It is designed for off grid Meshtastic communication, device management, mapping, node discovery, messaging, telemetry, TAK workflows, waypoints, routing and other mesh tools while keeping a No Bars Club visual identity.
+No Bars Command is the No Bars Club field communications platform. This repository is the Meshtastic side, built from the open source SocialMesh project and reworked around the No Bars Club brand.
 
-## Project status
+It is designed for off grid communication, device management, mapping, node discovery, messaging, telemetry, TAK workflows, waypoints, routing and other mesh tools while keeping a consistent No Bars Command interface.
 
-This repository is the **Meshtastic side** of the larger No Bars Connect project.
+## Product structure
 
-- **Meshtastic:** this repository, based on SocialMesh
-- **MeshCore:** `nobarsclubofficial/No-Bars-Connect-MeshCore`
-- **Future unified experience:** No Bars Connect will provide a startup choice between Meshtastic and MeshCore while keeping each protocol separate underneath.
+- **COMMAND • MESHTASTIC** — this repository, based on SocialMesh
+- **COMMAND • MESHCORE** — `nobarsclubofficial/No-Bars-Connect-MeshCore`, based on the NO BARS PRO work
+- **Umbrella product:** **NO BARS COMMAND**
+- **Subtitle:** **Off Grid Communications Platform**
+
+The long term goal is one No Bars Command experience with a startup choice between Meshtastic and MeshCore while keeping each protocol separate underneath.
 
 ## No Bars Club branding
 
@@ -34,20 +37,20 @@ This project is a modified fork of **SocialMesh** by gotnull:
 
 https://github.com/gotnull/socialmesh
 
-SocialMesh is licensed under the GNU General Public License v3.0 or later. No Bars Connect preserves the upstream copyright and license notices and makes the corresponding modified source available under the same license terms.
+SocialMesh is licensed under the GNU General Public License v3.0 or later. No Bars Command preserves the upstream copyright and license notices and makes the corresponding modified source available under the same license terms.
 
 Meshtastic is a separate open source project. Compatibility with Meshtastic does not imply ownership of, endorsement by, or affiliation with the Meshtastic project or its trademarks.
 
-## Important backend note
+## Hosted service audit
 
-The upstream SocialMesh client contains optional integrations with hosted services such as Firebase, RevenueCat, Stripe and account/cloud features. No Bars Connect must not depend on upstream production accounts. Those integrations are being audited, disabled, or replaced for the No Bars build while local radio communication and offline functionality are preserved.
+The upstream SocialMesh client contains optional integrations with hosted services such as Firebase, RevenueCat, Stripe and account/cloud features. No Bars Command must not silently depend on upstream production accounts. Those integrations are being audited, disabled, or replaced for the No Bars build while local radio communication and offline functionality are preserved.
 
 ## Development direction
 
 The first branded release focuses on:
 
-1. No Bars Connect product name and visual identity
-2. Android and iOS app identity and icons
+1. No Bars Command product identity
+2. Android and iOS display names, splash screens and icons
 3. Website matched dark theme
 4. Preserving BLE, USB and local Meshtastic operation
 5. Preserving messaging, nodes, maps, telemetry, device configuration and TAK functionality
@@ -56,10 +59,11 @@ The first branded release focuses on:
 
 ## Build
 
-This remains a Flutter project. Follow the upstream SocialMesh build requirements until No Bars specific build documentation is completed.
+This remains a Flutter project. Follow the upstream SocialMesh build requirements until No Bars Command specific build documentation is completed.
 
 ---
 
-**No Bars Connect**  
+**NO BARS COMMAND**  
+*Off Grid Communications Platform*  
 A No Bars Club project  
 https://www.nobarsclub.com
