@@ -24,6 +24,8 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+val nativeCmakeFile = file("src/main/jni/CMakeLists.txt")
+
 android {
     namespace = "com.gotnull.socialmesh"
     compileSdk = flutter.compileSdkVersion
@@ -39,10 +41,15 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
-    externalNativeBuild {
-        cmake {
-            version = "3.22.1"
-            path = file("src/main/jni/CMakeLists.txt")
+    // Some upstream branches declare a native build even when the CMake
+    // project is not present. Only configure it when the source actually
+    // exists so normal Flutter debug builds can proceed.
+    if (nativeCmakeFile.exists()) {
+        externalNativeBuild {
+            cmake {
+                version = "3.22.1"
+                path = nativeCmakeFile
+            }
         }
     }
 
@@ -58,10 +65,9 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.gotnull.socialmesh"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        // Keep the upstream namespace for native/source compatibility, but use
+        // a unique install ID so No Bars Command can coexist with SocialMesh.
+        applicationId = "com.nobarsclub.command"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -69,9 +75,11 @@ android {
         ndk {
             abiFilters += listOf("arm64-v8a", "armeabi-v7a")
         }
-        externalNativeBuild {
-            cmake {
-                cFlags("-O2 -fPIC -std=gnu11")
+        if (nativeCmakeFile.exists()) {
+            externalNativeBuild {
+                cmake {
+                    cFlags("-O2 -fPIC -std=gnu11")
+                }
             }
         }
     }
@@ -83,9 +91,6 @@ android {
             } else {
                 signingConfigs.getByName("debug")
             }
-            // Native (raster thread, Impeller, JNI) crashes only reach
-            // Crashlytics with the NDK integration, and only symbolicate when
-            // the unstripped libraries are uploaded after the build.
             configure<CrashlyticsExtension> {
                 nativeSymbolUploadEnabled = true
             }
@@ -93,8 +98,6 @@ android {
     }
 }
 
-// The Crashlytics plugin does not run the symbol upload on its own; chain it
-// to every release build so `flutter build appbundle --release` ships symbols.
 tasks.matching { it.name == "bundleRelease" || it.name == "assembleRelease" }.configureEach {
     finalizedBy("uploadCrashlyticsSymbolFileRelease")
 }
@@ -106,11 +109,7 @@ flutter {
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     implementation(platform("com.google.firebase:firebase-bom:$firebaseSdkVersion"))
-    // Native crash capture (SIGSEGV / SIGABRT in libflutter, JNI). The Dart
-    // plugin alone only reports Dart and Java exceptions.
     implementation("com.google.firebase:firebase-crashlytics-ndk")
-    // Firebase Messaging for custom FCM service
     implementation("com.google.firebase:firebase-messaging:23.4.0")
-    // Edge-to-edge support (Android 15 / SDK 35 requirement)
     implementation("androidx.activity:activity-ktx:1.10.1")
 }

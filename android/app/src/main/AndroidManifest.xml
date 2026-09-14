@@ -1,95 +1,52 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Block advertising ID permissions injected by Firebase Analytics SDK
-         (play-services-measurement-api). The app does not use ads or the
-         advertising ID. Removing these zeros out the GAID on Android 13+. -->
+    <!-- Block advertising ID permissions injected by Firebase Analytics SDK -->
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove" />
     <uses-permission android:name="android.permission.ACCESS_ADSERVICES_AD_ID" tools:node="remove" />
 
-    <!-- Bluetooth permissions for Android 12+ (API 31+) -->
-    <!-- neverForLocation allows BLE scanning without location permission -->
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation"
         tools:targetApi="s" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
 
-    <!-- Legacy Bluetooth permissions for Android 11 and below -->
-    <uses-permission android:name="android.permission.BLUETOOTH"
-        android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
-        android:maxSdkVersion="30" />
-
-    <!-- Soft-declare every hardware feature implied by the permissions below.
-         A radio companion connects over Bluetooth OR USB and runs fully offline,
-         so none of these are hard requirements. Without the explicit
-         required="false", the legacy BLUETOOTH/ACCESS_FINE_LOCATION/RECORD_AUDIO
-         permissions get promoted to required hardware features, and store device
-         filtering excludes installs whose reported feature profile does not
-         advertise them. -->
     <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="false" />
-    <!-- Touchscreen is implied required="true" for every app by default;
-         soft-declare so pointer/keyboard-driven devices are not filtered. -->
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
-    <!-- Location permission for Bluetooth scanning on older devices and for map features -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-feature android:name="android.hardware.location" android:required="false" />
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
-
-    <!-- For Android 13+ notification permission -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
-    <!-- Camera permission for QR code scanning and AR Node Radar -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
-    <!-- The CameraX plugin injects camera.any as required by default; override it
-         so devices without a camera (or that under-report it) can still install. -->
-    <uses-feature android:name="android.hardware.camera.any" android:required="false"
-        tools:replace="android:required" />
-
-    <!-- Microphone permission for Codec2 voice message recording -->
+    <uses-feature android:name="android.hardware.camera.any" android:required="false" tools:replace="android:required" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
-
-    <!-- Network permissions for WiFi-based nodes -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <!-- The WiFi state permissions above imply android.hardware.wifi as a
-         required feature for store device filtering. Nodes are also reachable
-         over BLE and USB, so WiFi is not a hard requirement. -->
     <uses-feature android:name="android.hardware.wifi" android:required="false" />
-
-    <!-- USB permissions for serial devices -->
     <uses-feature android:name="android.hardware.usb.host" android:required="false" />
-
-    <!-- Foreground service for background BLE connection to mesh radio -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
-
-    <!-- Vibration for haptic feedback -->
     <uses-permission android:name="android.permission.VIBRATE" />
-
-    <!-- Wake lock for keeping device awake during mesh operations -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <!-- Legacy storage permission for Android 12 and below -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
 
     <application
-        android:label="SocialMesh"
+        android:label="No Bars Command"
         android:name=".SocialmeshApplication"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_no_bars_command"
+        android:roundIcon="@drawable/ic_no_bars_command"
         android:allowBackup="false"
         android:extractNativeLibs="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:networkSecurityConfig="@xml/network_security_config">
-        <!-- Disable Firebase automatic screen reporting for privacy -->
         <meta-data
             android:name="google_analytics_automatic_screen_reporting_enabled"
             android:value="false" />
@@ -101,31 +58,24 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
-            <!-- Specifies an Android theme to apply to this Activity as soon as
-                 the Android process has started. This theme is visible to the user
-                 while the Flutter UI initializes. After that, this theme continues
-                 to determine the Window background behind the Flutter UI. -->
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
-                android:resource="@style/NormalTheme"
-            />
+                android:resource="@style/NormalTheme" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- Deep link support for socialmesh:// URLs -->
+            <!-- Upstream URI scheme retained temporarily for compatibility while deep links are audited. -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="socialmesh" />
             </intent-filter>
-            <!-- App Links support for https://socialmesh.app URLs -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Separate scheme/host from paths for proper matching -->
                 <data android:scheme="https" android:host="socialmesh.app" />
                 <data android:pathPrefix="/share/post" />
                 <data android:pathPrefix="/share/node" />
@@ -134,7 +84,6 @@
                 <data android:pathPrefix="/terms" />
                 <data android:pathPrefix="/privacy" />
             </intent-filter>
-            <!-- File type handlers for map data imports -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -159,31 +108,19 @@
                 <data android:pathPattern=".*\\.gpx" />
             </intent-filter>
         </activity>
-        <!-- Recovery screen for an install that is missing its native libraries.
-             Lives in its own process and its own task so it survives the kill of
-             the process that could not start the Flutter engine. -->
         <activity
             android:name=".BrokenInstallActivity"
             android:exported="false"
             android:process=":brokeninstall"
-            android:taskAffinity="com.gotnull.socialmesh.brokeninstall"
+            android:taskAffinity="com.nobarsclub.command.brokeninstall"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:theme="@style/NormalTheme" />
-
-        <!-- Don't delete the meta-data below.
-             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
-        <meta-data
-            android:name="flutterEmbedding"
-            android:value="2" />
-
-        <!-- Foreground service for background BLE connection to mesh radio -->
+        <meta-data android:name="flutterEmbedding" android:value="2" />
         <service
             android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
             android:foregroundServiceType="connectedDevice"
             android:exported="false" />
-
-        <!-- Custom Firebase Messaging Service to prevent live_activities plugin crashes -->
         <service
             android:name=".CustomFirebaseMessagingService"
             android:exported="false"
@@ -193,21 +130,12 @@
             </intent-filter>
         </service>
     </application>
-    <!-- Required to query activities that can process text, see:
-         https://developer.android.com/training/package-visibility and
-         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
 
-         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT" />
             <data android:mimeType="text/plain" />
         </intent>
-        <!-- Stripe Link + 3DS auth opens a Chrome Custom Tab on Android.
-             Without this query declaration (required by Android 11+
-             package-visibility rules) the SDK can't enumerate the
-             browser package and the Custom Tab fails to open or fails
-             to deep-link back via the return URL. -->
         <intent>
             <action android:name="android.support.customtabs.action.CustomTabsService" />
         </intent>

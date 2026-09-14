@@ -1,0 +1,116 @@
+name: Build Preview APK
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android-preview:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create CI environment
+        run: cp .env.ci .env
+
+      - name: Create isolated preview Firebase config
+        run: |
+          cat > android/app/google-services.json <<'JSON'
+          {
+            "project_info": {
+              "project_number": "000000000000",
+              "project_id": "no-bars-command-preview",
+              "storage_bucket": "no-bars-command-preview.invalid"
+            },
+            "client": [
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+                  "android_client_info": {
+                    "package_name": "com.nobarsclub.command"
+                  }
+                },
+                "api_key": [
+                  {
+                    "current_key": "NO_BARS_COMMAND_PREVIEW_KEY"
+                  }
+                ]
+              }
+            ],
+            "configuration_version": "1"
+          }
+          JSON
+
+          cat > lib/firebase_options.dart <<'DART'
+          import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
+          import 'package:flutter/foundation.dart'
+              show defaultTargetPlatform, kIsWeb, TargetPlatform;
+
+          /// CI-only Firebase options for the No Bars Command preview build.
+          /// These intentionally do not point at the upstream SocialMesh backend.
+          class DefaultFirebaseOptions {
+            static FirebaseOptions get currentPlatform {
+              if (kIsWeb) {
+                throw UnsupportedError('Preview Firebase is not configured for web.');
+              }
+              switch (defaultTargetPlatform) {
+                case TargetPlatform.android:
+                  return android;
+                case TargetPlatform.iOS:
+                  return ios;
+                default:
+                  throw UnsupportedError('Preview Firebase is not configured for this platform.');
+              }
+            }
+
+            static const FirebaseOptions android = FirebaseOptions(
+              apiKey: 'NO_BARS_COMMAND_PREVIEW_KEY',
+              appId: '1:000000000000:android:0000000000000000000000',
+              messagingSenderId: '000000000000',
+              projectId: 'no-bars-command-preview',
+              storageBucket: 'no-bars-command-preview.invalid',
+            );
+
+            static const FirebaseOptions ios = FirebaseOptions(
+              apiKey: 'NO_BARS_COMMAND_PREVIEW_KEY',
+              appId: '1:000000000000:ios:0000000000000000000000',
+              messagingSenderId: '000000000000',
+              projectId: 'no-bars-command-preview',
+              storageBucket: 'no-bars-command-preview.invalid',
+              iosBundleId: 'com.nobarsclub.command',
+            );
+          }
+          DART
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.47.2"
+          channel: stable
+          cache: true
+
+      - name: Generate client environment
+        run: dart run tool/generate_client_env.dart
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Android debug APK
+        run: flutter build apk --debug
+
+      - name: Rename preview APK
+        run: cp build/app/outputs/flutter-apk/app-debug.apk build/app/outputs/flutter-apk/no-bars-command-preview.apk
+
+      - name: Upload preview APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: no-bars-command-android-preview
+          path: build/app/outputs/flutter-apk/no-bars-command-preview.apk
+          if-no-files-found: error
+          retention-days: 14
