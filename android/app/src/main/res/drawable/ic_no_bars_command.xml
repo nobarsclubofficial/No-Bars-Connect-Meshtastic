@@ -1,0 +1,42 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- No Bars Club / No Bars Command launcher mark.
+         Dark field with cream signal bars crossed by a bold slash. -->
+    <path
+        android:fillColor="#080B0A"
+        android:pathData="M0,0H108V108H0Z" />
+
+    <path
+        android:fillColor="#EEE9DC"
+        android:pathData="M20,68H30V79H20Z" />
+    <path
+        android:fillColor="#EEE9DC"
+        android:pathData="M35,58H45V79H35Z" />
+    <path
+        android:fillColor="#EEE9DC"
+        android:pathData="M50,47H60V79H50Z" />
+    <path
+        android:fillColor="#EEE9DC"
+        android:pathData="M65,35H75V79H65Z" />
+    <path
+        android:fillColor="#EEE9DC"
+        android:pathData="M80,23H90V79H80Z" />
+
+    <!-- Slash -->
+    <path
+        android:strokeColor="#9A6F35"
+        android:strokeWidth="9"
+        android:strokeLineCap="round"
+        android:pathData="M22,25L87,82" />
+
+    <!-- Subtle command frame -->
+    <path
+        android:strokeColor="#7F8F6A"
+        android:strokeWidth="2.5"
+        android:fillColor="#00000000"
+        android:pathData="M12,12H96V96H12Z" />
+</vector>
