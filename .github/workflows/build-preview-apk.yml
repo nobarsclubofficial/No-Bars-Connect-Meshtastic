@@ -33,12 +33,12 @@ jobs:
                 "client_info": {
                   "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
                   "android_client_info": {
-                    "package_name": "com.gotnull.socialmesh"
+                    "package_name": "com.nobarsclub.command"
                   }
                 },
                 "api_key": [
                   {
-                    "current_key": "AIzaSyDUMMY_NO_BARS_COMMAND_PREVIEW_ONLY"
+                    "current_key": "NO_BARS_COMMAND_PREVIEW_KEY"
                   }
                 ]
               }
@@ -48,7 +48,6 @@ jobs:
           JSON
 
           cat > lib/firebase_options.dart <<'DART'
-          // SPDX-License-Identifier: GPL-3.0-or-later
           import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
           import 'package:flutter/foundation.dart'
               show defaultTargetPlatform, kIsWeb, TargetPlatform;
@@ -71,7 +70,7 @@ jobs:
             }
 
             static const FirebaseOptions android = FirebaseOptions(
-              apiKey: 'AIzaSyDUMMY_NO_BARS_COMMAND_PREVIEW_ONLY',
+              apiKey: 'NO_BARS_COMMAND_PREVIEW_KEY',
               appId: '1:000000000000:android:0000000000000000000000',
               messagingSenderId: '000000000000',
               projectId: 'no-bars-command-preview',
@@ -79,12 +78,12 @@ jobs:
             );
 
             static const FirebaseOptions ios = FirebaseOptions(
-              apiKey: 'AIzaSyDUMMY_NO_BARS_COMMAND_PREVIEW_ONLY',
+              apiKey: 'NO_BARS_COMMAND_PREVIEW_KEY',
               appId: '1:000000000000:ios:0000000000000000000000',
               messagingSenderId: '000000000000',
               projectId: 'no-bars-command-preview',
               storageBucket: 'no-bars-command-preview.invalid',
-              iosBundleId: 'com.gotnull.socialmesh',
+              iosBundleId: 'com.nobarsclub.command',
             );
           }
           DART
