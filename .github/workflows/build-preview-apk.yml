@@ -19,6 +19,34 @@ jobs:
       - name: Create CI environment
         run: cp .env.ci .env
 
+      - name: Create isolated preview Firebase config
+        run: |
+          cat > android/app/google-services.json <<'JSON'
+          {
+            "project_info": {
+              "project_number": "000000000000",
+              "project_id": "no-bars-command-preview",
+              "storage_bucket": "no-bars-command-preview.invalid"
+            },
+            "client": [
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+                  "android_client_info": {
+                    "package_name": "com.gotnull.socialmesh"
+                  }
+                },
+                "api_key": [
+                  {
+                    "current_key": "AIzaSyDUMMY_NO_BARS_COMMAND_PREVIEW_ONLY"
+                  }
+                ]
+              }
+            ],
+            "configuration_version": "1"
+          }
+          JSON
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
