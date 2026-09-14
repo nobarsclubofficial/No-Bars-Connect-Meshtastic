@@ -24,6 +24,8 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+val nativeCmakeFile = file("src/main/jni/CMakeLists.txt")
+
 android {
     namespace = "com.gotnull.socialmesh"
     compileSdk = flutter.compileSdkVersion
@@ -39,10 +41,15 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
-    externalNativeBuild {
-        cmake {
-            version = "3.22.1"
-            path = file("src/main/jni/CMakeLists.txt")
+    // Some upstream branches declare a native build even when the CMake
+    // project is not present. Only configure it when the source actually
+    // exists so normal Flutter debug builds can proceed.
+    if (nativeCmakeFile.exists()) {
+        externalNativeBuild {
+            cmake {
+                version = "3.22.1"
+                path = nativeCmakeFile
+            }
         }
     }
 
@@ -69,9 +76,11 @@ android {
         ndk {
             abiFilters += listOf("arm64-v8a", "armeabi-v7a")
         }
-        externalNativeBuild {
-            cmake {
-                cFlags("-O2 -fPIC -std=gnu11")
+        if (nativeCmakeFile.exists()) {
+            externalNativeBuild {
+                cmake {
+                    cFlags("-O2 -fPIC -std=gnu11")
+                }
             }
         }
     }
