@@ -41,7 +41,8 @@
     <application
         android:label="No Bars Command"
         android:name=".SocialmeshApplication"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_no_bars_command"
+        android:roundIcon="@drawable/ic_no_bars_command"
         android:allowBackup="false"
         android:extractNativeLibs="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -111,7 +112,7 @@
             android:name=".BrokenInstallActivity"
             android:exported="false"
             android:process=":brokeninstall"
-            android:taskAffinity="com.gotnull.socialmesh.brokeninstall"
+            android:taskAffinity="com.nobarsclub.command.brokeninstall"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:theme="@style/NormalTheme" />
